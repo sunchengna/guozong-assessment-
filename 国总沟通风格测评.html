@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>国总沟通风格自评表</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #333; line-height: 1.6; }
+.container { max-width: 800px; margin: 0 auto; padding: 20px; }
+
+/* 介绍页 */
+.intro { text-align: center; padding: 60px 20px; }
+.intro h1 { font-size: 28px; margin-bottom: 16px; color: #1a1a2e; }
+.intro .subtitle { font-size: 16px; color: #666; margin-bottom: 40px; }
+.intro .instructions { background: #fff; border-radius: 12px; padding: 30px; text-align: left; margin-bottom: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.intro .instructions h3 { margin-bottom: 12px; color: #1a1a2e; }
+.intro .instructions p { color: #555; margin-bottom: 8px; }
+
+/* 答题页 */
+.quiz-header { position: sticky; top: 0; background: #fff; padding: 16px 0; border-bottom: 1px solid #e8e8e8; z-index: 100; margin-bottom: 20px; }
+.progress-bar { height: 6px; background: #e8e8e8; border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #4f6df5, #7c5cfc); border-radius: 3px; transition: width 0.3s; }
+.progress-text { font-size: 13px; color: #999; text-align: right; }
+.dimension-tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 13px; margin-bottom: 16px; font-weight: 500; }
+.dim-1 { background: #e8f0fe; color: #1967d2; }
+.dim-2 { background: #fce8e6; color: #c5221f; }
+.dim-3 { background: #e6f4ea; color: #137333; }
+.dim-4 { background: #fef7e0; color: #b06000; }
+.dim-5 { background: #f3e8fd; color: #7627bb; }
+
+.question-card { background: #fff; border-radius: 12px; padding: 28px; margin-bottom: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.question-text { font-size: 17px; font-weight: 500; color: #1a1a2e; margin-bottom: 20px; line-height: 1.7; }
+.option-list { display: flex; flex-direction: column; gap: 10px; }
+.option { padding: 14px 18px; border: 2px solid #e8e8e8; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-size: 15px; color: #444; position: relative; }
+.option:hover { border-color: #b0c4ff; background: #f8faff; }
+.option.selected { border-color: #4f6df5; background: #f0f4ff; color: #1a1a2e; }
+.option .opt-label { font-weight: 600; margin-right: 8px; }
+
+.nav-buttons { display: flex; justify-content: space-between; margin-top: 20px; }
+.btn { padding: 12px 32px; border-radius: 8px; border: none; font-size: 15px; cursor: pointer; transition: all 0.2s; font-weight: 500; }
+.btn-primary { background: #4f6df5; color: #fff; }
+.btn-primary:hover { background: #3d5be0; }
+.btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+.btn-secondary { background: #fff; color: #4f6df5; border: 1px solid #4f6df5; }
+.btn-secondary:hover { background: #f0f4ff; }
+
+/* 报告页 */
+.report { padding: 20px 0; }
+.report h1 { font-size: 24px; text-align: center; margin-bottom: 8px; color: #1a1a2e; }
+.report .report-subtitle { text-align: center; color: #999; margin-bottom: 30px; font-size: 14px; }
+.report-section { background: #fff; border-radius: 12px; padding: 28px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.report-section h2 { font-size: 18px; color: #1a1a2e; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #f0f0f0; }
+
+/* 画像条 */
+.profile-item { margin-bottom: 24px; }
+.profile-label { font-size: 14px; font-weight: 600; color: #1a1a2e; margin-bottom: 4px; }
+.profile-bar-container { position: relative; height: 40px; }
+.profile-bar { position: absolute; top: 16px; left: 0; right: 0; height: 6px; background: #f0f0f0; border-radius: 3px; }
+.profile-segments { position: absolute; top: 16px; left: 0; right: 0; height: 6px; display: flex; border-radius: 3px; overflow: hidden; }
+.profile-segments span { flex: 1; }
+.seg-low { background: #fce8e6; }
+.seg-mid { background: #fef7e0; }
+.seg-high { background: #e6f4ea; }
+.profile-point { position: absolute; top: 8px; width: 22px; height: 22px; background: #4f6df5; border: 3px solid #fff; border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.2); transform: translateX(-50%); z-index: 2; transition: left 0.8s ease; }
+.profile-labels { position: absolute; top: 28px; left: 0; right: 0; display: flex; font-size: 11px; color: #999; }
+.profile-labels span { flex: 1; }
+.profile-labels .label-left { text-align: left; }
+.profile-labels .label-center { text-align: center; }
+.profile-labels .label-right { text-align: right; }
+
+/* 维度详情 */
+.dim-detail { margin-bottom: 28px; padding-bottom: 24px; border-bottom: 1px solid #f0f0f0; }
+.dim-detail:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.dim-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.dim-score { font-size: 28px; font-weight: 700; color: #4f6df5; }
+.dim-name { font-size: 16px; font-weight: 600; color: #1a1a2e; }
+.dim-level { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+.level-low { background: #fce8e6; color: #c5221f; }
+.level-mid { background: #fef7e0; color: #b06000; }
+.level-high { background: #e6f4ea; color: #137333; }
+.dim-content { margin-bottom: 16px; }
+.dim-content h4 { font-size: 14px; color: #666; margin-bottom: 6px; font-weight: 600; }
+.dim-content p { font-size: 14px; color: #555; line-height: 1.7; }
+.dim-content ul { padding-left: 20px; }
+.dim-content li { font-size: 14px; color: #555; margin-bottom: 4px; line-height: 1.7; }
+.scenario-box { background: #f8faff; border-left: 3px solid #4f6df5; padding: 12px 16px; border-radius: 0 8px 8px 0; margin-bottom: 10px; }
+.scenario-box .q-label { font-size: 12px; color: #4f6df5; font-weight: 600; margin-bottom: 4px; }
+.scenario-box .q-text { font-size: 13px; color: #666; margin-bottom: 6px; }
+.scenario-box .your-choice { font-size: 13px; color: #1a1a2e; font-weight: 500; }
+.scenario-box .choice-analysis { font-size: 13px; color: #555; margin-top: 6px; line-height: 1.7; }
+
+/* 关键发现 */
+.finding-item { padding: 16px; border-radius: 8px; margin-bottom: 12px; }
+.finding-strength { background: #e6f4ea; border-left: 3px solid #137333; }
+.finding-blind { background: #fce8e6; border-left: 3px solid #c5221f; }
+.finding-item h4 { font-size: 14px; margin-bottom: 6px; }
+.finding-item p { font-size: 14px; color: #555; line-height: 1.7; }
+
+/* 行动建议 */
+.action-item { display: flex; gap: 12px; margin-bottom: 16px; align-items: flex-start; }
+.action-num { min-width: 28px; height: 28px; background: #4f6df5; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; }
+.action-text { font-size: 14px; color: #555; line-height: 1.7; }
+.action-text strong { color: #1a1a2e; }
+
+.restart-btn { display: block; margin: 30px auto; padding: 14px 40px; }
+
+/* 隐藏 */
+.hidden { display: none !important; }
+
+/* 密码页 */
+.password-page { text-align: center; padding: 80px 20px; }
+.password-page h1 { font-size: 24px; margin-bottom: 8px; color: #1a1a2e; }
+.password-page .pwd-subtitle { color: #666; margin-bottom: 40px; font-size: 14px; }
+.pwd-box { background: #fff; border-radius: 12px; padding: 36px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); max-width: 400px; margin: 0 auto 20px; }
+.pwd-box label { display: block; font-size: 14px; color: #555; margin-bottom: 12px; text-align: left; }
+.pwd-box input { width: 100%; padding: 12px 16px; border: 2px solid #e8e8e8; border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.2s; }
+.pwd-box input:focus { border-color: #4f6df5; }
+.pwd-error { color: #c5221f; font-size: 13px; margin-top: 8px; display: none; text-align: left; }
+.pwd-btn { width: 100%; margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<!-- 密码页 -->
+<div id="pwdPage" class="container password-page">
+  <h1>国总沟通风格自评表</h1>
+  <p class="pwd-subtitle">请输入访问密码以开始测评</p>
+  <div class="pwd-box">
+    <label for="pwdInput">访问密码</label>
+    <input type="password" id="pwdInput" placeholder="请输入密码" onkeydown="if(event.key==='Enter')checkPwd()">
+    <p class="pwd-error" id="pwdError">密码错误，请重新输入</p>
+    <button class="btn btn-primary pwd-btn" onclick="checkPwd()">验证并进入</button>
+  </div>
+</div>
+
+<!-- 介绍页 -->
+<div id="introPage" class="container intro hidden">
+  <h1>国总沟通风格自评表</h1>
+  <p class="subtitle">海外管理者沟通风格行为诊断工具</p>
+  <div class="instructions">
+    <h3>填写说明</h3>
+    <p>1. 以下共有 23 道题，每题描述一个海外管理场景</p>
+    <p>2. 请根据你的真实行为习惯选择最可能采取的做法</p>
+    <p>3. 没有对错之分，选择最符合你的选项即可</p>
+    <p>4. 预计用时约 8-10 分钟</p>
+    <p>5. 完成后可立即查看你的沟通风格诊断报告</p>
+  </div>
+  <button class="btn btn-primary" onclick="startQuiz()">开始测评</button>
+</div>
+
+<!-- 答题页 -->
+<div id="quizPage" class="container hidden">
+  <div class="quiz-header">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">0 / 23</div>
+  </div>
+  <div id="questionContainer"></div>
+  <div class="nav-buttons">
+    <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" disabled>上一题</button>
+    <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">下一题</button>
+  </div>
+</div>
+
+<!-- 报告页 -->
+<div id="reportPage" class="container report hidden"></div>
+
+<script>
+// ========== 密码验证 ==========
+const ACCESS_PASSWORD = 'guozong2024';
+
+function checkPwd() {
+  const input = document.getElementById('pwdInput').value;
+  if (input === ACCESS_PASSWORD) {
+    showPage('introPage');
+  } else {
+    document.getElementById('pwdError').style.display = 'block';
+    document.getElementById('pwdInput').value = '';
+    document.getElementById('pwdInput').focus();
+  }
+}
+
+// ========== 数据定义 ==========
+const dimensions = [
+  { name: '表达风格', tagClass: 'dim-1', questions: [0,1,2,3,4],
+    levels: [
+      { name: '对抗-回避型', min: 1, max: 2, color: 'level-low',
+        pattern: '你在表达上要么太强硬直接对抗，要么回避不处理，缺少中间地带。在海外管理中，这两种极端都容易出问题——对抗让本地团队防御，回避让问题持续发酵。',
+        pros: ['在紧急情况下，对抗风格能快速推动执行', '回避风格在某些文化中被视为"给面子"'],
+        cons: ['对抗在跨文化场景中容易被理解为"不尊重"，尤其在高权力距离文化中', '回避会让团队觉得"领导不管事"或"标准可以商量"', '团队难以预测你的反应方式，沟通成本增加']
+      },
+      { name: '指令-灵活型', min: 2, max: 3, color: 'level-mid',
+        pattern: '你能根据情境调整表达方式，偏任务导向，目标清晰但有时缺少背景解释。在中方团队中这种风格比较高效，但在跨文化场景中可能需要更多的"为什么"。',
+        pros: ['效率高，团队知道目标和标准', '有一定弹性，不是一味强硬或一味退让', '在执行力强的团队中效果好'],
+        cons: ['"只说做什么不说为什么"在本地团队中可能导致"机械执行"而非"认同执行"', '对总部的反馈可能偏委婉，导致本地市场声音传不上去', '当团队能力不足时，目标授权可能变成"放任"']
+      },
+      { name: '诊断-建构型', min: 3, max: 4.01, color: 'level-high',
+        pattern: '你倾向于先理解情境再选择沟通方式，善于通过解释背景和原因来提升团队的认同感。你不回避问题，但也不急于下结论。',
+        pros: ['兼顾信息收集和关系维护', '团队理解"为什么"，执行质量更高', '在跨文化场景中更容易获得本地团队的认同'],
+        cons: ['在紧急情况下可能被解读为"犹豫不决"', '过多的解释在某些文化中可能被视为"领导不够果断"', '需要在"充分沟通"和"快速决策"之间找到平衡']
+      }
+    ]
+  },
+  { name: '情绪觉察', tagClass: 'dim-2', questions: [5,6,7,8],
+    levels: [
+      { name: '盲区-焦虑型', min: 1, max: 2, color: 'level-low',
+        pattern: '你对自身情绪的觉察度较低，可能在情绪激动时难以自我察觉和调整。当文化差异导致工作节奏变化时，你容易产生焦虑或不满，但不太能识别这些情绪正在影响你的判断。',
+        pros: ['在高压环境中，"不太在意情绪"有时能保持执行力'],
+        cons: ['情绪可能在不经意间影响沟通效果和团队氛围', '下属能感受到你的情绪即使你没说出来', '在跨文化场景中，情绪外露更容易被放大解读', '长期积累可能在临界点爆发，造成关系损伤']
+      },
+      { name: '理解-犯难型', min: 2, max: 3, color: 'level-mid',
+        pattern: '你能意识到文化差异的存在，在理智上理解"不应该用自己的标准要求别人"。但当文化差异真正影响到工作时，你内心仍然会产生焦虑或不满，而且不太确定该怎么处理这种情绪。',
+        pros: ['你有"文化差异"这根弦，不会完全无视', '你至少能意识到自己的情绪波动', '有改变的基础和意愿'],
+        cons: ['"理解但做不到"的状态长期持续，会变成一种隐性文化偏见', '下属能感受到你的"内心纠结"，即使你没有说出来', '可能在某个临界点突然爆发', '停留在认知层面不够，需要发展出具体的行为策略']
+      },
+      { name: '重评-校准型', min: 3, max: 4.01, color: 'level-high',
+        pattern: '你对自身情绪有清晰的觉察能力，能够在情绪波动时及时识别并主动调整。你能够将文化差异带来的"不适"重新定义为"常态"，释放认知资源用于解决问题。',
+        pros: ['能将事件从"威胁"重新定义为"常态"', '不会让情绪干扰管理决策', '在跨文化场景中保持稳定'],
+        cons: ['过度平静可能让团队觉得你"不关心"', '可以将觉察力延伸到团队层面——识别他人的情绪状态']
+      }
+    ]
+  },
+  { name: '倾听习惯', tagClass: 'dim-3', questions: [9,10,11,12],
+    levels: [
+      { name: '替代-截断型', min: 1, max: 2, color: 'level-low',
+        pattern: '你在倾听方面需要特别关注——你可能习惯性地打断他人或替对方表达。这会让团队觉得"说了也没用"，久而久之选择沉默。',
+        pros: ['在时间紧迫时能快速推进', '对思路不清的下属可能起到"拉回正轨"的作用'],
+        cons: ['传递"我不耐烦"的信号，尤其在高语境文化中被视为不尊重', '团队会逐渐停止主动表达', '你可能错过对方方案中的新视角', '在跨语言场景中，打断比沉默的伤害更大']
+      },
+      { name: '等待-被动型', min: 2, max: 3, color: 'level-mid',
+        pattern: '你不会频繁打断别人，但也不是一个主动的倾听者。当对方沉默或表达困难时，你会等一等，但不太会主动用提问或引导帮助对方说出来。',
+        pros: ['给了一定的表达空间', '不会让人觉得完全被忽视', '比截断型有明显进步'],
+        cons: ['"等着但不主动"会让本地员工觉得压力很大——沉默中他们猜测"领导是不是不耐烦了"', '你可能觉得自己"没有打断"就算倾听了，但团队的感受是"领导没在认真听"', '在跨语言场景中，"等"不如"帮"——一个支架式提问比沉默等待更能帮对方把想法说出来']
+      },
+      { name: '支架-觉察型', min: 3, max: 4.01, color: 'level-high',
+        pattern: '你善于倾听，能够通过提问帮助对方完成表达。你给予空间的同时保持对沟通状态的觉察，能够在倾听和支持之间灵活切换。',
+        pros: ['帮助表达困难的人把想法说出来', '团队感到被支持而非被施压', '能听到更多的真实信息'],
+        cons: ['需要更多时间和耐心', '可以进一步关注非语言信号（表情、语气等）']
+      }
+    ]
+  },
+  { name: '反馈接纳', tagClass: 'dim-4', questions: [13,14,15,16,17],
+    levels: [
+      { name: '防御-归咎型', min: 1, max: 2, color: 'level-low',
+        pattern: '当团队提出不同意见时，你内心会有较强的不适感，倾向于为自己的意图辩护或将问题归因于他人。团队会很快学会一个信号——"提了也没用"，然后不再提。',
+        pros: ['在某些需要快速决策的场景中，不纠结于不同意见能提高效率'],
+        cons: ['团队会迅速形成"不说真话"的习惯', '你发现的"沉默"往往不是第一天形成的', '通过HR投诉或第三方转达往往是反馈渠道失效的最后信号', '失去从团队获取真实信息的能力', '在跨文化场景中，本地员工的文化背景让他们更难主动反馈']
+      },
+      { name: '抑制-延迟型', min: 2, max: 3, color: 'level-mid',
+        pattern: '当团队提出不同意见时，你不会当场拒绝，但内心会有不适感。你愿意"听"，但不一定真的"接"。反馈过后，你可能会想想，但很少主动去找人确认真实想法。',
+        pros: ['没有让提意见的人当场难堪', '至少没有关上反馈的门', '有一定的反思意识'],
+        cons: ['团队感受到的是"提了也没用"', '"我问了他们不说" vs 团队觉得"问了也白说"——双方的感知存在系统性偏差', '通过HR投诉往往是渠道失效的信号', '在跨文化场景中，本地员工的文化背景让间接反馈更常见，需要你更主动']
+      },
+      { name: '探究-整合型', min: 3, max: 4.01, color: 'level-high',
+        pattern: '你对不同意见持开放态度，能够认真考虑团队的观点。你主动寻求反馈，并将反馈转化为具体的行为改变。这是建立团队心理安全的基础。',
+        pros: ['团队敢于说真话', '你能获取更准确的信息做出决策', '跨文化管理中建立信任的关键能力'],
+        cons: ['需要持续维护——一次的防御反应可能摧毁长期建立的信任', '可以将个人经验转化为团队制度（如定期匿名反馈机制）']
+      }
+    ]
+  },
+  { name: '跨文化敏感度', tagClass: 'dim-5', questions: [18,19,20,21,22],
+    levels: [
+      { name: '同化-忽视型', min: 1, max: 2, color: 'level-low',
+        pattern: '你在跨文化沟通中倾向于以自身文化标准衡量他人，将文化行为差异误判为个人能力或态度问题。这在海外管理中是最需要改进的。',
+        pros: ['在需要统一标准的场景中有一定合理性'],
+        cons: ['可能导致本地人才流失', '将系统性文化差异误判为个案', '反复踩同一个坑', '"微笑点头"不代表认同——读不懂这些信号会在管理中持续碰壁', '以母公司文化要求所有员工是民族中心主义的表现']
+      },
+      { name: '意识-适应型', min: 2, max: 3, color: 'level-mid',
+        pattern: '你已经注意到不同文化背景的员工在沟通方式上有明显差异，也愿意做出一些调整。但目前的调整更多是"被动应激"式的——遇到了才想，而不是提前准备。',
+        pros: ['没有把本地员工当"中方员工"来管理', '至少在观察和思考文化差异', '有改变的意愿和基础'],
+        cons: ['"意识到了但没行动"和"没意识到"在团队看来效果是一样的', '可能把系统性文化差异误判为个别现象', '停留在"认知"层面不够，需要发展出具体的行为策略和制度化的管理方式']
+      },
+      { name: '差异-内化型', min: 3, max: 4.01, color: 'level-high',
+        pattern: '你对跨文化沟通差异有高度敏感度，不仅识别差异，还主动调整沟通情境和策略。你将文化适应从"忍耐"转化为"认同"，这是真正的全球化领导力。',
+        pros: ['本地团队感到被理解和尊重', '能获取更多真实信息', '建立差异化的管理体系，可持续'],
+        cons: ['需要持续学习——不同市场的文化差异很大', '在"包容差异"和"统一目标"之间持续寻找平衡']
+      }
+    ]
+  }
+];
+
+// 23道题数据
+const questions = [
+  // Q1-Q5 表达风格
+  { dim: 0, text: '你发现当地团队连续两周没有完成陈列标准，多个门店存在明显差距。你会怎么做？',
+    options: [
+      { text: '在周会上直接点名指出问题门店，要求本周内必须整改到位', score: 2, strategy: '对抗式纠偏', analysis: '在周会上直接点名——这在紧急场景中很有效，但在跨文化场景中，公开点名可能让当地员工感到"丢面子"，引发防御反应。' },
+      { text: '把问题整理成清单发给各店负责人，附上标准照片和整改期限', score: 3, strategy: '结构化指令', analysis: '用清单和标准沟通——清晰高效，降低了模糊性，但缺乏对话空间。团队可能只是"执行"而非"认同"，不了解问题背后的原因。' },
+      { text: '先去几家店实地看看是什么原因导致的，再决定怎么沟通', score: 4, strategy: '情境诊断后回应', analysis: '先实地查看原因再决定沟通方式——这是最成熟的做法，兼顾了信息收集和关系维护。可能发现标准本身需要调整，也可能发现是执行问题，策略完全不同。' },
+      { text: '觉得可能是标准定得太高了，打算先观察一周看看趋势', score: 1, strategy: '延迟回避', analysis: '先观察一周——这会让问题持续发酵，团队可能解读为"领导不太在意这件事"，标准的权威性会被削弱。' }
+    ]},
+  { dim: 0, text: '你认为总部最近推出的渠道政策不适合当地市场，总部正在收集反馈。你会怎么做？',
+    options: [
+      { text: '直接写一份详细的反对意见，附上本地市场数据，发给总部', score: 4, strategy: '数据驱动的直面对抗', analysis: '以数据为支撑向上挑战——这是变革型领导的核心行为（智力激发）。总部需要真实的声音，有理有据的反对是最有价值的反馈。' },
+      { text: '先跟其他国总商量，然后联合几个人一起向总部反馈', score: 3, strategy: '联盟式协商', analysis: '联合力量增加反馈的影响力——策略上更聪明，但需要小心不要被解读为"拉帮结派"。联合的依据应该是数据和事实，而非立场。' },
+      { text: '在执行中根据本地情况做适当调整，同时找机会向上反馈', score: 2, strategy: '灵活执行中的渐进影响', analysis: '既执行又反馈——有策略性但可能造成"先斩后奏"的观感。如果调整后效果好，总部可能认可；如果效果不好，你承担全部责任。' },
+      { text: '先按总部要求执行，出了问题再反馈也不迟', score: 1, strategy: '被动响应', analysis: '等出问题再反馈——错失了最佳调整窗口，增加了沉没成本。等到出了问题，往往已经造成了实际损失。' }
+    ]},
+  { dim: 0, text: '你需要本地团队执行一个他们以前没做过的终端推广活动，你会怎么布置？',
+    options: [
+      { text: '把方案拆解成详细步骤，一步步教他们怎么做', score: 2, strategy: '微观指导', analysis: '一步步教——对完全没有经验的新手可能有必要，但长期来看会抑制团队的主动性和创造力。在跨文化场景中，可能被解读为"不信任我们的能力"。' },
+      { text: '说清楚目标和标准，让他们自己想办法达成', score: 3, strategy: '目标授权', analysis: '目标+标准的授权方式——能激发自主性，但对从未做过这个活动的团队来说，可能缺乏必要的指导。适合有一定经验的团队。' },
+      { text: '先解释为什么要做这个活动（市场背景、竞品动态），再说明期望的结果', score: 4, strategy: '意义建构式沟通', analysis: '先说"为什么"再说"做什么"——通过赋予意义提升承诺，而非仅靠指令。这对新任务、跨文化场景特别有效，团队理解了背景才会真正投入。' },
+      { text: '把方案发下去，他们有问题再来问我', score: 1, strategy: '被动响应式管理', analysis: '发下去等反馈——缺乏主动沟通和支持，执行偏差风险很高。团队可能有问题但不敢问，或者以为自己理解了实际上理解错了。' }
+    ]},
+  { dim: 0, text: '月度经营分析会上，两位主管因为预算分配吵了起来，情绪都很激动。你会怎么做？',
+    options: [
+      { text: '立即打断，"先别吵了，我来定"', score: 2, strategy: '权威裁决', analysis: '快速终止冲突——效率最高但可能压制合理意见。在跨文化场景中，这种权威式干预可能被本地员工视为"不尊重讨论过程"。' },
+      { text: '"你们两个先冷静一下，各自把数据摆出来再讨论"', score: 4, strategy: '结构化冲突转化', analysis: '将情绪冲突引导为任务冲突——用数据替代情绪，是最有建设性的做法。既控制了场面，又没有压制观点，还把讨论拉回了理性轨道。' },
+      { text: '让双方各自说完观点，然后引导大家投票决定', score: 3, strategy: '参与式决策', analysis: '让双方表达+集体决策——增加了参与感，但未解决情绪问题。投票可能让输的一方更不满，需要配合情绪安抚。' },
+      { text: '"今天先到这里，你们俩会后分别来找我谈"', score: 1, strategy: '冲突回避', analysis: '推迟处理——降低了当下的紧张，但回避了公开解决问题的机会。其他参会者会觉得"这个问题没有被解决"，而且私下处理不透明。' }
+    ]},
+  { dim: 0, text: '你发现一位本地主管提交的方案有明显漏洞，但他对这个方案很投入、信心十足。你会怎么做？',
+    options: [
+      { text: '直接告诉他"这里不行，需要改"，并说明具体怎么改', score: 2, strategy: '直接纠偏', analysis: '直接指出问题——高效但可能伤害自尊。在高权力距离文化中，下级可能表面接受但内心抵触，影响后续的主动性。' },
+      { text: '问几个引导性问题，让他自己发现问题所在', score: 4, strategy: '教练式引导', analysis: '通过提问激发自我反思——保护自尊的同时促进行为改变。当他自己发现漏洞时，改正的动力远大于被指出来。这是长期发展效果最好的方式。' },
+      { text: '先肯定方案中有价值的部分，再提出你的担忧，请他一起完善', score: 3, strategy: '三明治反馈法', analysis: '先肯定再提改进——建立了心理安全感再提批评。但要注意"三明治"模式可能被识破，如果每次都这样，团队会知道"先夸后批"的套路。' },
+      { text: '觉得也不是大问题，先批了让他做，有问题再调整', score: 1, strategy: '事后纠正', analysis: '允许试错——有学习价值，但可能造成资源浪费和信任损耗。如果试错后失败了，团队会质疑"你当时为什么不指出来"。' }
+    ]},
+  // Q6-Q9 情绪觉察
+  { dim: 1, text: '当地员工因为宗教节日连续请假一周，导致一个重要项目进度严重滞后。你内心的第一反应更接近：',
+    options: [
+      { text: '不满——"项目这么紧还请假，能不能以工作为重"', score: 1, strategy: '单一标准归因', analysis: '以自身文化标准衡量他人——这是民族中心主义的表现。在当地文化中，宗教节日可能比工作更重要，这不是"态度问题"而是"价值观差异"。' },
+      { text: '焦虑——"完了，这个项目要延期了，得想办法补"', score: 2, strategy: '任务焦虑驱动', analysis: '关注任务目标——但缺乏情绪调节，将外部事件内部化为个人威胁。焦虑会消耗认知资源，反而降低解决问题的能力。' },
+      { text: '理解但犯难——"知道这是文化差异，但工作怎么办"', score: 3, strategy: '认知冲突中的平衡', analysis: '认知层面理解文化差异——这是进步，但"犯难"说明行为层面还没有应对策略。下一步是从"犯难"发展出具体的预案（如提前预留节日缓冲）。' },
+      { text: '平静——"这是当地正常情况，我来重新调整计划就好"', score: 4, strategy: '文化适应性重评', analysis: '将事件从"威胁"重新定义为"常态"——这是认知重评策略，释放认知资源用于解决问题。这不仅是最成熟的情绪反应，也是最有效的问题解决起点。' }
+    ]},
+  { dim: 1, text: '你跟一位下属沟通完方案，走出会议室后意识到自己刚才语气可能不太好。你会怎么做？',
+    options: [
+      { text: '不觉得有什么问题，讨论激烈很正常', score: 1, strategy: '情绪盲区', analysis: '缺乏情绪觉察——他人能感受到你的情绪变化但你自己看不到（乔哈里窗的"盲区"）。在跨文化场景中，情绪外露的影响会被放大。' },
+      { text: '心里想了一下，但觉得对方应该能理解', score: 2, strategy: '自我合理化', analysis: '有觉察但选择合理化——将潜在失误最小化以维护自我形象。"对方应该能理解"是常见的自我安慰，但对方可能并不这样认为。' },
+      { text: '会在下次见面时主动提一句"上次讨论的时候我是不是太急了"', score: 3, strategy: '延迟情绪修复', analysis: '延迟但有行动——自我觉察+关系修复，效果好但时效性有损失。情绪伤害的最佳修复窗口是24小时内，越晚效果越弱。' },
+      { text: '当场或立刻发消息确认"刚才我的表达方式你有没有不舒服"', score: 4, strategy: '即时情绪校准', analysis: '实时监控情绪影响并主动修复——这是情绪智力的高级表现。即时修复传递的信号是"我在意你的感受"，对建立心理安全非常有效。' }
+    ]},
+  { dim: 1, text: '连续加班处理紧急事务一周后，你发现本地团队每天准时下班。你的想法更接近：',
+    options: [
+      { text: '"不太公平，我一个人在扛"', score: 1, strategy: '社会比较产生的不公平感', analysis: '将自我付出与他人比较——但忽视了文化背景对"公平"定义的差异。在当地文化中，到点下班可能是"按规矩办事"，而非"不够敬业"。' },
+      { text: '"各司其职，他们的工作确实到点就能结束"', score: 3, strategy: '角色边界认知', analysis: '将差异归因于工作性质而非态度——认知较为客观。但缺少文化维度的思考：是否本地员工也愿意加班但有文化/法规约束？' },
+      { text: '"我加班是因为我没安排好，跟他们没关系"', score: 2, strategy: '内归因自我反思', analysis: '将原因归于自身——体现反思能力，但可能导致过度内耗。如果每次都归因于自己，长期来看会消耗管理者自身的精力和信心。' },
+      { text: '"这就是本地的工作文化，我需要适应而不是要求他们改变"', score: 4, strategy: '文化相对主义', analysis: '认识到工作价值观的文化差异，选择自我适应而非文化霸权——这是跨文化管理者最成熟的心态。下一步是思考如何在这种文化差异下实现团队目标。' }
+    ]},
+  { dim: 1, text: '有下属跟你说："上次您当着大家的面说那个方案不行，我其实挺难受的。"你的第一反应更接近：',
+    options: [
+      { text: '"我只是就事论事，你不要太敏感"', score: 1, strategy: '意图辩护', analysis: '以自己的意图辩护，忽视对方的情感体验——这是基本归因错误。"就事论事"是你的意图，但对方感受到的是"当众被否定"，两者都可以是真实的。' },
+      { text: '"不好意思，我说话确实比较直接"', score: 2, strategy: '承认但未深入', analysis: '承认事实但未探索对方的感受——关系修复不彻底。对方可能觉得"你知道但你不在乎"，需要进一步追问具体感受。' },
+      { text: '"谢谢你告诉我，你说说哪些地方让你不舒服？"', score: 4, strategy: '深度倾听与探究', analysis: '通过感谢和探究强化"说真话是安全的"——这是建立心理安全最强的行为之一。当管理者说"谢谢你告诉我"时，团队下次更可能主动反馈。' },
+      { text: '"我理解了，以后类似的情况我会注意场合和方式"', score: 3, strategy: '承诺行为改变', analysis: '将反馈转化为具体的行为承诺——这是高质量交换关系的特征。但如果没有先充分探究对方的感受，承诺可能不够精准。' }
+    ]},
+  // Q10-Q13 倾听习惯
+  { dim: 2, text: '本地员工用不太流利的语言向你汇报一个重要问题，说到一半卡住了。你会怎么做？',
+    options: [
+      { text: '帮他补充完——"你是不是想说……"', score: 1, strategy: '替代性表达', analysis: '以自身理解替代对方表达——可能传递"我不耐烦"的信号。在高语境文化中，替人说话被视为不尊重，对方可能觉得"领导根本不关心我想说什么"。' },
+      { text: '等几秒，然后说"没关系，你慢慢想"', score: 3, strategy: '等待性包容', analysis: '给予时间和空间——包容型领导的表现。但"没关系你慢慢想"可能让对方感到更大的表现压力，觉得自己"不够好"。' },
+      { text: '用简单的问题引导——"你是想说这个月的库存问题吗"', score: 4, strategy: '支架式提问', analysis: '通过缩小问题范围帮助对方完成表达——兼顾效率和尊重。"支架式提问"让对方感到被支持而非被施压，是最适合跨语言场景的倾听方式。' },
+      { text: '"你先整理一下，写成文字发给我也行"', score: 2, strategy: '通道切换', analysis: '承认口头沟通障碍并切换渠道——降低了语言门槛，但可能让对方觉得"你不想听我说"。同时也延缓了问题解决，适合非紧急场景。' }
+    ]},
+  { dim: 2, text: '下属提出了一个方案，你听完前两句就知道这个方向有问题。你会怎么做？',
+    options: [
+      { text: '直接打断——"这个方向我之前考虑过，不太行"', score: 1, strategy: '经验性截断', analysis: '基于已有经验快速否定——这是确认偏差的表现。你可能确实考虑过，但对方的方案可能有你没注意到的角度。打断还传递了"你的想法不值得听"的信号。' },
+      { text: '耐心听完，然后说"我之前也想过类似方案，但有个问题"', score: 2, strategy: '先接后评', analysis: '先给予表达空间再反馈——维护了自尊。但本质上还是用自己的经验否定了对方，没有真正保留开放性。' },
+      { text: '耐心听完完整方案，说不定有我没考虑到的角度', score: 3, strategy: '悬置判断', analysis: '保持开放心态——可能发现新的可能性。这是一种"谦逊的领导力"，承认自己不一定全对。但需要在效率和开放之间找到平衡。' },
+      { text: '听完后问"你有没有想过另一种可能性"，引导他从不同角度思考', score: 4, strategy: '苏格拉底式引导', analysis: '通过提问激发自主思考——既保留了对方的主动性，又引入了新的视角。即使最终方案要改，对方也会觉得"是我自己想通的"而非"被否定了"。' }
+    ]},
+  { dim: 2, text: '1对1谈话中，你说完一个问题后对方沉默了5秒钟。你更可能：',
+    options: [
+      { text: '打破沉默——"你觉得呢？"或直接继续说自己的想法', score: 2, strategy: '填充性打破', analysis: '打破沉默——在低语境文化中很常见，但在高语境文化中，沉默可能是思考、犹豫或不知道怎么开口的信号。过早打破可能终止了对方本想说的话。' },
+      { text: '等着，看他想说什么', score: 3, strategy: '被动等待', analysis: '允许沉默存在——给了空间，但缺乏主动支持。对方可能感受到压力而非安全，尤其是当你"盯着"他等他说的时候。' },
+      { text: '觉得他可能没想好，换个话题先聊', score: 1, strategy: '话题回避', analysis: '通过切换话题降低即时压力——但可能错失了重要的表达机会。对方可能正在鼓起勇气说一些敏感的话，你一换话题他就"安全了"但也"没机会了"。' },
+      { text: '安静地等，同时观察他的表情判断是没想好还是不知道怎么开口', score: 4, strategy: '觉察性等待', analysis: '给予空间同时保持对沟通状态的觉察——这是最成熟的做法。通过非语言信号判断对方状态，再决定是继续等还是主动支持。' }
+    ]},
+  { dim: 2, text: '你开完一个你觉得很有收获的会议，但会后发现好几个参会的人表情不太好。你会怎么做？',
+    options: [
+      { text: '不太在意，会议效率高就行', score: 1, strategy: '任务中心主义', analysis: '关注任务完成而忽视关系维护——长期来看会损害团队参与度。团队会学会"会议上只说领导想听的"，你逐渐失去获取真实信息的能力。' },
+      { text: '可能是刚才讨论太激烈了，过两天就好了', score: 2, strategy: '被动期望自我修复', analysis: '期望时间自动修复——忽视了负面情绪的持续影响。情绪感染研究表明，负面情绪的传递和持续比我们想象的更持久，"过两天"可能已经太晚。' },
+      { text: '找一两个人问问"今天会议你们感觉怎么样"', score: 3, strategy: '选择性探查', analysis: '主动寻求反馈——范围有限但有方向。选择信任的人来问能获得比较真实的信息，但要注意选择的人是否有代表性。' },
+      { text: '反思今天的会议方式，下次注意让每个人都有表达机会', score: 4, strategy: '系统性会议复盘', analysis: '关注过程公平——确保每个人都有发声机会。这不仅是修复一次会议，而是在建设一种"每个人的声音都重要"的团队文化。' }
+    ]},
+  // Q14-Q18 反馈接纳
+  { dim: 3, text: '会议上，一位本地主管当众说："我觉得这个方向可能不适合我们市场。"这跟你的判断完全相反。你会怎么做？',
+    options: [
+      { text: '"你说说哪里不适合，我们讨论一下"', score: 4, strategy: '开放探究', analysis: '将异议正常化为讨论而非挑战——这是鼓励建设性冲突的关键行为。当团队看到"反对领导的观点不会被惩罚"时，才会真正开放。' },
+      { text: '心里不太舒服但还是听完他的理由', score: 2, strategy: '抑制性倾听', analysis: '表面接纳但内心有防御——信息可能被过滤。你能听到对方说了什么，但可能听不到他真正想表达的意思，因为你的心智资源被情绪占用了。' },
+      { text: '"你的想法也有道理，但我综合考虑后还是觉得应该这样推进"', score: 1, strategy: '礼貌性接纳后维持立场', analysis: '表面上尊重但实质上未改变——这是伪参与决策。对方会感知到"说了也没用"，下次不会再提。在跨文化场景中，本地员工更敏感于这种"假开放"。' },
+      { text: '会后仔细想想他的观点，说不定真有我没考虑到的', score: 3, strategy: '延迟性深度反思', analysis: '双环学习——不仅思考"怎么做"还反思"方向对不对"，是最深层的反思。但让对方觉得当场没被重视，建议配合一句"我会认真想想你的观点"。' }
+    ]},
+  { dim: 3, text: '你得知一位下属通过HR渠道投诉你的管理方式，而没有直接找你谈。你知道后更可能：',
+    options: [
+      { text: '觉得有意见应该当面说，绕路沟通效率太低', score: 1, strategy: '通道归咎', analysis: '归咎下属选择的通道——忽视了在高权力距离文化中，下属回避直接反馈是常态而非"绕路"。如果下属觉得直接找你谈安全，他就不会走HR了。' },
+      { text: '心里不太高兴，但会想想他说的有没有道理', score: 2, strategy: '情绪抑制后的理性分析', analysis: '先管理情绪再处理信息——有进步，但未主动修复沟通渠道。你分析了他的内容，但没有解决"为什么他不直接找你"这个更根本的问题。' },
+      { text: '理解他可能不敢当面说，会主动找他聊聊', score: 3, strategy: '关系安全重建', analysis: '认识到低质量交换关系导致了间接反馈——主动改善关系质量。关键是在聊天中传递"在我面前说真话是安全的"这个信号。' },
+      { text: '反思是不是自己的管理方式让他觉得直接找你谈不安全', score: 4, strategy: '系统归因与自我修正', analysis: '将问题归因于系统（关系安全度）而非个人（下属胆小）——这是最深层的反思。改变系统比改变个人更有效，也是心理安全感理论的核心。' }
+    ]},
+  { dim: 3, text: '你主动在会议上问"大家对我有什么建议"，结果一片沉默。你的想法更接近：',
+    options: [
+      { text: '"看来大家对我没什么意见"', score: 1, strategy: '无反馈推断为无意见', analysis: '在高权力距离环境中，沉默更可能意味着不安全而非满意。将"没有反馈"等同于"没有意见"是最常见的判断错误，也是团队心理安全感恶化的起点。' },
+      { text: '"可能不好意思说，以后找机会单独聊"', score: 2, strategy: '情境归因与延迟行动', analysis: '意识到情境因素（场合不适合）——但推迟行动可能错失建立安全信号的机会。"以后"常常意味着"永远不会"。' },
+      { text: '"这说明团队还不敢说真话，我需要做点什么"', score: 3, strategy: '系统诊断与行动意向', analysis: '将沉默解读为系统性问题——具有改变意愿。但"做点什么"还不够具体，需要转化为实际行动。' },
+      { text: '"下次换个方式，比如匿名问卷或让第三方来收集"', score: 4, strategy: '结构性渠道优化', analysis: '通过改变反馈渠道降低风险感知——主动创造安全的反馈环境。匿名渠道是心理安全感建设的重要工具，尤其在跨文化场景中。' }
+    ]},
+  { dim: 3, text: '你在360反馈中看到一条匿名评价："这位领导有时让人不敢表达不同意见。"你会怎么做？',
+    options: [
+      { text: '不太认同，可能是某个人有情绪', score: 1, strategy: '个体化归因与防御', analysis: '将批评归因于评价者而非自身——自我服务偏差。如果只有一条可以忽略，但如果360中有多条类似评价，这种防御反应会让你失去改进的关键信息。' },
+      { text: '想想具体是哪些场景让对方有这种感觉', score: 2, strategy: '情境化反思', analysis: '将抽象评价转化为具体行为场景——这是改进的第一步。建议回想最近3个月的会议和1对1，哪些场合可能让团队感到压力。' },
+      { text: '认真对待，找几个信任的人聊聊真实的感受', score: 3, strategy: '三角验证式探究', analysis: '通过多个独立信息源交叉验证——获取更准确的自我认知。关键是选择"敢于说真话"的人，而不是只会说好话的人。' },
+      { text: '结合多条反馈做系统分析，找到自己需要调整的行为模式', score: 4, strategy: '系统性反馈整合', analysis: '多源反馈+行为模式分析——双环学习。不仅改变行为，还反思行为背后的心智模式，形成持续改进循环。' }
+    ]},
+  { dim: 3, text: '你做了一个决策，执行两周后发现方向确实有问题。你会怎么处理？',
+    options: [
+      { text: '低调调整方向，不特别提之前的决定', score: 1, strategy: '静默修正', analysis: '通过不提及错误维护领导权威——但团队可能失去从错误中学习的机会。而且团队其实都知道方向变了，你的"不提"只会让他们觉得你在回避。' },
+      { text: '跟团队说"情况有变化，我们调整一下策略"', score: 2, strategy: '情境化归因的调整', analysis: '将错误归因于"环境变化"而非"判断失误"——降低了威胁感但不完全诚实。团队心里清楚是判断问题，这种措辞可能反而降低信任。' },
+      { text: '跟团队坦诚复盘"我上次的判断确实有问题，我们来总结一下为什么"', score: 3, strategy: '示范性脆弱', analysis: '领导者主动展示脆弱——这是建立团队心理安全最强的信号。当领导说"我错了"时，团队才会觉得"我犯错也可以被接受"。' },
+      { text: '公开承认错误，感谢当时提出不同意见的人（如果有的话），并把教训写进复盘文档', score: 4, strategy: '制度化学习', analysis: '将个人教训转化为组织知识——同时正强化提出异议的行为。这不仅是个人学习，而是在建设一种"允许犯错、鼓励异议"的团队文化。' }
+    ]},
+  // Q19-Q23 跨文化敏感度
+  { dim: 4, text: '你发现本地团队在会议上几乎不发言，只有中方员工在讨论。你更可能认为：',
+    options: [
+      { text: '本地团队对这个议题可能不太熟悉', score: 1, strategy: '能力归因', analysis: '将行为差异归因于个人能力——这是基本归因错误。在高权力距离文化中，"不发言"更可能是因为文化规范而非能力不足。' },
+      { text: '他们可能性格就不太爱表达', score: 2, strategy: '特质归因', analysis: '将文化行为模式误判为个人性格特征——忽视了文化背景的影响。如果是"性格"问题，换个场景他们也不说话；如果是文化问题，换个场景（如一对一）他们可能很健谈。' },
+      { text: '在本地文化中，公开反对上级是很不礼貌的', score: 3, strategy: '文化维度归因', analysis: '认识到文化规范对行为的约束——GLOBE理论中的权力距离维度。但仅仅"知道"不够，需要进一步思考如何调整会议形式来适应这种文化特点。' },
+      { text: '可能是会议形式不适合他们——也许他们更适应一对一或小范围讨论', score: 4, strategy: '情境适配式调整', analysis: '不仅识别文化差异，还主动调整沟通情境——这是最主动的做法。高语境文化中，一对一或小范围讨论往往比大会发言更有效。' }
+    ]},
+  { dim: 4, text: '中方团队认为本地员工"到点下班"是不够敬业，本地员工认为中方团队"加班文化"是不尊重人。你会怎么做？',
+    options: [
+      { text: '按公司制度执行，没有例外', score: 1, strategy: '制度刚性', analysis: '以正式制度统合文化差异——效率高但可能加剧文化冲突。"没有例外"在某些文化中被视为公平，在另一些文化中被视为不近人情。' },
+      { text: '跟双方分别谈话，了解各自的想法', score: 2, strategy: '双边信息收集', analysis: '这是冲突诊断阶段——收集信息但尚未进入解决。只做到这一步可能让双方觉得"领导只是问问"，需要后续有实际行动。' },
+      { text: '分别跟双方解释对方的文化背景，帮助互相理解', score: 3, strategy: '跨文化桥梁建构', analysis: '通过增加双方的文化知识减少误解——但可能停留在认知层面。"理解了"不等于"接受了"，需要配合制度层面的调整。' },
+      { text: '建立差异化的管理规则——比如中方团队弹性加班，本地团队按当地劳动法，但共同目标对齐', score: 4, strategy: '差异化整合', analysis: '承认差异的合理性，在共同目标框架内实现包容性管理——这是最成熟的跨文化管理方式。差异化的规则+统一的目标=包容性管理。' }
+    ]},
+  { dim: 4, text: '你批评了一位本地员工的工作质量，对方"微笑点头"但之后什么都没改。你的理解更接近：',
+    options: [
+      { text: '态度有问题——"答应了不做，这就是执行力差"', score: 1, strategy: '行为表面归因', analysis: '微笑点头在低语境文化中=认同，但在高语境文化中可能是保全面子的回避策略。将文化差异误判为态度问题，会导致反复踩同一个坑。' },
+      { text: '可能没完全理解我的意思——"下次说具体一点"', score: 2, strategy: '信息传递归因', analysis: '将问题归因于信息传递环节——有帮助但可能忽视了文化因素。即使你说得再具体，如果对方的文化习惯是"不当面否定上级"，他还是会微笑点头。' },
+      { text: '在某些文化中，微笑和点头不代表认同，可能是一种避免冲突的方式', score: 3, strategy: '文化编码解读', analysis: '理解"微笑"在不同文化中的多重含义——这是高语境文化理论的核心。"微笑"可以是认同、不认同、尴尬、回避，在不同文化中含义完全不同。' },
+      { text: '需要换一种方式确认——比如让他用自己的话复述一遍目标和行动计划', score: 4, strategy: '理解度验证', analysis: '通过反馈回路确认信息是否被准确接收——闭环沟通模型。让对方复述是确认理解最有效的方式，避免了文化差异导致的理解偏差。' }
+    ]},
+  { dim: 4, text: '你发现同样的话对中方团队和本地团队效果完全不同（比如"你最近状态不太好"）。你会怎么做：',
+    options: [
+      { text: '以中方团队的理解为基准，本地团队需要适应公司文化', score: 1, strategy: '文化同化', analysis: '以母公司文化为标准要求所有员工——民族中心主义。短期可能维持效率，但长期会导致本地人才流失和团队分裂。' },
+      { text: '注意到了，但觉得这是个别现象', score: 2, strategy: '模式忽视', analysis: '将系统性文化差异误判为个案——系统思考的缺失。如果是"个别现象"就不会反复出现，反复出现说明是系统性差异。' },
+      { text: '开始有意识地对不同群体调整表达方式', score: 3, strategy: '行为层面的适应', analysis: '在行为上做出调整——文化智力的行为维度（CQ Action）。但缺乏系统性，依赖个人记忆和临场判断。' },
+      { text: '系统梳理不同文化群体的沟通偏好，并形成差异化的沟通策略', score: 4, strategy: '制度化差异管理', analysis: '将个人经验转化为组织能力——全球化领导力模型。不只是你自己适应，而是让整个管理层都形成差异化的沟通策略，这是可持续的。' }
+    ]},
+  { dim: 4, text: '本地员工习惯先寒暄10分钟再进入正题，你觉得这降低了效率。你会怎么做？',
+    options: [
+      { text: '直接说"我们今天时间紧，直接说正事吧"', score: 1, strategy: '低语境效率优先', analysis: '以低语境文化的方式处理高语境文化场景——可能被感知为不尊重或冷漠。在当地文化中，寒暄不是"浪费时间"而是建立信任的必要步骤。' },
+      { text: '简单寒暄两句就切入正题', score: 2, strategy: '最小化礼节性投入', analysis: '部分适应但核心立场未变——对方可能觉得你的寒暄是"走形式"而非真诚的。在高语境文化中，"不真诚"比"不做"更伤人。' },
+      { text: '入乡随俗，配合他们的节奏', score: 3, strategy: '文化适应', analysis: '尊重当地文化规范——但可能产生内心不适感。"配合"意味着你是在忍耐而非认同，这种不适感对方能感受到。' },
+      { text: '甚至学会用他们的开场方式——先聊聊天气、家庭、周末，再进正题，因为这在当地是建立信任的方式', score: 4, strategy: '文化内化与关系建构', analysis: '将文化适应从"忍耐"转化为"认同"——理解寒暄的价值并主动参与。当你真正认同这种文化时，对方会感受到真诚，信任关系才会建立。' }
+    ]}
+];
+
+// 重点场景选择（每个维度选1-2道最有诊断价值的题）
+const keyScenarios = [0, 4, 6, 8, 10, 12, 13, 15, 17, 19, 21]; // Q1,Q5,Q7,Q9,Q11,Q13,Q14,Q16,Q18,Q20,Q22
+
+// ========== 全局状态 ==========
+let currentQ = 0;
+let answers = new Array(23).fill(-1); // -1表示未作答
+
+// ========== 页面切换 ==========
+function showPage(id) {
+  document.querySelectorAll('.container').forEach(el => el.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  window.scrollTo(0, 0);
+}
+
+function startQuiz() {
+  showPage('quizPage');
+  renderQuestion();
+}
+
+// ========== 答题逻辑 ==========
+function renderQuestion() {
+  const q = questions[currentQ];
+  const dim = dimensions[q.dim];
+  const total = questions.length;
+  const answered = answers.filter(a => a !== -1).length;
+
+  document.getElementById('progressFill').style.width = ((answered / total) * 100) + '%';
+  document.getElementById('progressText').textContent = answered + ' / ' + total;
+
+  let html = `
+    <div class="question-card">
+      <span class="dimension-tag ${dim.tagClass}">${dim.name}</span>
+      <div class="question-text">Q${currentQ+1}. ${q.text}</div>
+      <div class="option-list">
+  `;
+
+  q.options.forEach((opt, i) => {
+    const selected = answers[currentQ] === i ? ' selected' : '';
+    html += `<div class="option${selected}" onclick="selectOption(${i})">
+      <span class="opt-label">${String.fromCharCode(65+i)}.</span>${opt.text}
+    </div>`;
+  });
+
+  html += `</div></div>`;
+  document.getElementById('questionContainer').innerHTML = html;
+
+  // 按钮状态
+  document.getElementById('prevBtn').disabled = currentQ === 0;
+  const nextBtn = document.getElementById('nextBtn');
+  if (currentQ === total - 1) {
+    nextBtn.textContent = answered === total ? '查看报告' : `已完成 ${answered}/${total}，提交查看报告`;
+    nextBtn.disabled = false;
+  } else {
+    nextBtn.textContent = '下一题';
+    nextBtn.disabled = false;
+  }
+}
+
+function selectOption(idx) {
+  answers[currentQ] = idx;
+  renderQuestion();
+}
+
+function nextQuestion() {
+  if (currentQ < questions.length - 1) {
+    currentQ++;
+    renderQuestion();
+  } else {
+    // 检查是否全部作答
+    const unanswered = [];
+    for (let i = 0; i < 23; i++) {
+      if (answers[i] === -1) unanswered.push(i + 1);
+    }
+    if (unanswered.length > 0) {
+      if (!confirm(`你还有第 ${unanswered.join('、')} 题未作答，确定要提交查看报告吗？`)) return;
+    }
+    generateReport();
+  }
+}
+
+function prevQuestion() {
+  if (currentQ > 0) {
+    currentQ--;
+    renderQuestion();
+  }
+}
+
+// ========== 评分与报告生成 ==========
+function calculateScores() {
+  const dimScores = [];
+  dimensions.forEach((dim, di) => {
+    let total = 0, count = 0;
+    dim.questions.forEach(qi => {
+      if (answers[qi] !== -1) {
+        total += questions[qi].options[answers[qi]].score;
+        count++;
+      }
+    });
+    dimScores.push(count > 0 ? total / count : 0);
+  });
+  return dimScores;
+}
+
+function getLevel(dimIdx, score) {
+  const levels = dimensions[dimIdx].levels;
+  for (let i = 0; i < levels.length; i++) {
+    if (score >= levels[i].min && score < levels[i].max) return levels[i];
+  }
+  return levels[levels.length - 1];
+}
+
+function generateReport() {
+  const scores = calculateScores();
+  const now = new Date();
+  const dateStr = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+
+  let html = `
+    <h1>国总沟通风格诊断报告</h1>
+    <p class="report-subtitle">测评日期：${dateStr}</p>
+
+    <!-- 一、沟通风格画像 -->
+    <div class="report-section">
+      <h2>一、你的沟通风格画像</h2>
+  `;
+
+  // 画像条
+  dimensions.forEach((dim, di) => {
+    const score = scores[di];
+    const level = getLevel(di, score);
+    const percent = ((score - 1) / 3) * 100;
+    html += `
+      <div class="profile-item">
+        <div class="profile-label">${dim.name}</div>
+        <div class="profile-bar-container">
+          <div class="profile-segments">
+            <span class="seg-low"></span>
+            <span class="seg-mid"></span>
+            <span class="seg-high"></span>
+          </div>
+          <div class="profile-point" style="left: ${Math.max(2, Math.min(98, percent))}%"></div>
+          <div class="profile-labels">
+            <span class="label-left">${dim.levels[0].name}</span>
+            <span class="label-center">${dim.levels[1].name}</span>
+            <span class="label-right">${dim.levels[2].name}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  html += `</div>`;
+
+  // 二、你的风格类型
+  const typeNames = dimensions.map((dim, di) => getLevel(di, scores[di]).name);
+  html += `
+    <div class="report-section">
+      <h2>二、你的风格类型</h2>
+      <p style="font-size:16px; color:#1a1a2e; font-weight:600; margin-bottom:12px;">
+        ${typeNames.join(' × ')}
+      </p>
+    </div>
+  `;
+
+  // 三、各维度详细分析
+  html += `<div class="report-section"><h2>三、各维度详细分析</h2>`;
+
+  dimensions.forEach((dim, di) => {
+    const score = scores[di];
+    const level = getLevel(di, score);
+
+    html += `
+      <div class="dim-detail">
+        <div class="dim-header">
+          <span class="dim-score">${score.toFixed(1)}</span>
+          <span class="dim-name">${dim.name}</span>
+          <span class="dim-level ${level.color}">${level.name}</span>
+        </div>
+        <div class="dim-content">
+          <h4>你的行为模式</h4>
+          <p>${level.pattern}</p>
+        </div>
+        <div class="dim-content">
+          <h4>这个风格的好处</h4>
+          <ul>${level.pros.map(p => `<li>${p}</li>`).join('')}</ul>
+        </div>
+        <div class="dim-content">
+          <h4>这个风格的潜在风险</h4>
+          <ul>${level.cons.map(c => `<li>${c}</li>`).join('')}</ul>
+        </div>
+    `;
+
+    // 动态场景回顾：从该维度中挑keyScenarios
+    const dimKeyScenarios = keyScenarios.filter(qi => questions[qi].dim === di && answers[qi] !== -1);
+    if (dimKeyScenarios.length > 0) {
+      html += `<div class="dim-content"><h4>典型场景回顾</h4>`;
+      dimKeyScenarios.forEach(qi => {
+        const q = questions[qi];
+        const chosen = q.options[answers[qi]];
+        html += `
+          <div class="scenario-box">
+            <div class="q-label">Q${qi+1}</div>
+            <div class="q-text">${q.text}</div>
+            <div class="your-choice">你选了${String.fromCharCode(65+answers[qi])}：${chosen.text}</div>
+            <div class="choice-analysis">${chosen.analysis}</div>
+          </div>
+        `;
+      });
+      html += `</div>`;
+    }
+
+    html += `</div>`;
+  });
+  html += `</div>`;
+
+  // 四、关键发现
+  // 找最强和最弱的维度
+  const sortedDims = scores.map((s, i) => ({ score: s, idx: i })).sort((a, b) => b.score - a.score);
+  const strengths = sortedDims.slice(0, 2);
+  const blinds = sortedDims.slice(-2).reverse();
+
+  html += `
+    <div class="report-section">
+      <h2>四、关键发现</h2>
+      <div class="dim-content"><h4>你的优势领域</h4></div>
+  `;
+  strengths.forEach(s => {
+    const level = getLevel(s.idx, s.score);
+    html += `<div class="finding-item finding-strength">
+      <h4>${dimensions[s.idx].name}（${s.score.toFixed(1)}分）</h4>
+      <p>${level.pattern.substring(0, 80)}...</p>
+    </div>`;
+  });
+
+  html += `<div class="dim-content" style="margin-top:16px"><h4>你的盲区领域</h4></div>`;
+  blinds.forEach(s => {
+    const level = getLevel(s.idx, s.score);
+    html += `<div class="finding-item finding-blind">
+      <h4>${dimensions[s.idx].name}（${s.score.toFixed(1)}分）</h4>
+      <p>${level.pattern.substring(0, 80)}...</p>
+    </div>`;
+  });
+  html += `</div>`;
+
+  // 五、下一步建议
+  const dimActions = [
+    // 表达风格
+    ['下次布置任务时，先花2分钟解释"为什么要做这件事"，再说"期望的结果"', '找一个最近让你纠结的向上反馈场景，写一份附数据的简短意见发出去'],
+    // 情绪觉察
+    ['本周找一个触发你情绪的场景，事后花3分钟写下"我当时的情绪是什么、为什么"', '下次意识到语气不好时，24小时内找对方确认"上次我的方式你有没有不舒服"'],
+    // 倾听习惯
+    ['下次有人汇报卡住时，试试支架式提问："你是不是想说关于___的问题？"', '本周的1对1谈话中，对方沉默时数到10再开口'],
+    // 反馈接纳
+    ['本周找一位信任的下属问一个问题："你觉得在我面前说真话安全吗？"', '在下次会议上，当有人提出不同意见时，说"你说说为什么，我们讨论一下"'],
+    // 跨文化敏感度
+    ['本周找一位本地员工做一次15分钟聊天，只聊他的文化背景和工作感受', '梳理你所在市场中，中方团队和本地团队在3个方面的沟通差异，写成一页纸']
+  ];
+
+  // 找最需要改进的2个维度
+  const needImprove = sortedDims.slice(-2).reverse();
+
+  html += `<div class="report-section"><h2>五、下一步建议</h2>
+    <p style="color:#666; margin-bottom:16px; font-size:14px;">基于你的测评结果，建议你从最需要改进的维度开始：</p>
+  `;
+  needImprove.forEach((item, i) => {
+    const actions = dimActions[item.idx];
+    actions.forEach((action, ai) => {
+      html += `
+        <div class="action-item">
+          <div class="action-num">${i*2+ai+1}</div>
+          <div class="action-text"><strong>${dimensions[item.idx].name}：</strong>${action}</div>
+        </div>
+      `;
+    });
+  });
+  html += `</div>`;
+
+  // 底部
+  html += `
+    <div style="text-align:center; padding:20px 0; color:#999; font-size:13px;">
+      <p>本报告由干部发展部出品</p>
+      <p style="margin-top:8px;">本测评仅供个人发展参考，不作为绩效评价依据</p>
+    </div>
+    <button class="btn btn-secondary restart-btn" onclick="restart()">重新测评</button>
+  `;
+
+  document.getElementById('reportPage').innerHTML = html;
+  showPage('reportPage');
+
+  // 动画效果：画像条的点从左滑入
+  setTimeout(() => {
+    document.querySelectorAll('.profile-point').forEach(el => {
+      el.style.transition = 'left 0.8s ease';
+    });
+  }, 100);
+}
+
+function restart() {
+  answers = new Array(23).fill(-1);
+  currentQ = 0;
+  showPage('introPage');
+}
+</script>
+</body>
+</html>
